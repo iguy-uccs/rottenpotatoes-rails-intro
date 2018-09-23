@@ -11,13 +11,24 @@ class MoviesController < ApplicationController
   end
 
   def index
+  
+    # Configure @all_ratings
+    @all_ratings = Movie.possible_ratings
+    
+    # Configure ratings to be displayed, all if none expected
+    displayed_ratings = params[:ratings].nil? ? Movie.possible_ratings : params[:ratings].keys
+      
+    # Configure sort order
     if params[:sortby] == 'title'
-      @movies = Movie.order('title ASC')
+      sort_order = 'title ASC'
     elsif params[:sortby] == 'date'
-      @movies = Movie.order('release_date ASC')
+      sort_order = 'release_date ASC'
     else
-      @movies = Movie.all
+      sort_order = ''
     end
+    
+    # Movie Rating filter
+    @movies = Movie.where(rating: displayed_ratings).order(sort_order)
   end
 
   def new
