@@ -4,9 +4,9 @@ Ian Guy
 %table#movies
   %thead
     %tr
-      %th Movie Title
+      %th{id: :title_header, class: (params[:sortby] == 'title') ? :hilite : :nil}= link_to 'Movie Title', movies_path(sortby: :title)
       %th Rating
-      %th Release Date
+      %th{id: :release_date_header, class: (params[:sortby] == 'date') ? :hilite : :nil}= link_to 'Release Date', movies_path(sortby: :date)
       %th More Info
   %tbody
     - @movies.each do |movie|
