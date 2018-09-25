@@ -27,9 +27,9 @@ class MoviesController < ApplicationController
     
     # Configure rating filters
     if session[:ratings].nil?
-      rating_keys = Movie.possible_ratings
+      @rating_keys = Movie.possible_ratings
     else
-      rating_keys = session[:ratings].keys
+      @rating_keys = session[:ratings].keys
     end
       
     # Configure sort order
@@ -42,7 +42,7 @@ class MoviesController < ApplicationController
     end
     
     # Movie Rating filter
-    @movies = Movie.where(rating: rating_keys).order(sort_order)
+    @movies = Movie.where(rating: @rating_keys).order(sort_order)
   end
 
   def new
