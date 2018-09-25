@@ -16,16 +16,20 @@ class MoviesController < ApplicationController
     @all_ratings = Movie.possible_ratings
     
     # Get ratings from session if unspecified
-    if params[:ratings].nil?
-      #If no params or session, show all ratings
-      session[:ratings] = session[:ratings].nil? ? Movie.possible_ratings : session[:ratings]
-    else
+    if !params[:ratings].nil?
       session[:ratings] = params[:ratings]
     end
     
     #Get sort order from session if unspecified
     if !params[:sortby].nil?
       session[:sortby] = params[:sortby]
+    end
+    
+    # Configure rating filters
+    if session[:ratings].nil?
+      rating_keys = Movie.possible_ratings
+    else
+      rating_keys = session[:ratings].keys
     end
       
     # Configure sort order
@@ -38,7 +42,7 @@ class MoviesController < ApplicationController
     end
     
     # Movie Rating filter
-    @movies = Movie.where(rating: session[:ratings].keys).order(sort_order)
+    @movies = Movie.where(rating: rating_keys).order(sort_order)
   end
 
   def new
