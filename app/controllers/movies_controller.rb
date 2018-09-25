@@ -15,20 +15,30 @@ class MoviesController < ApplicationController
     # Configure @all_ratings
     @all_ratings = Movie.possible_ratings
     
-    # Configure ratings to be displayed, all if none expected
-    displayed_ratings = params[:ratings].nil? ? Movie.possible_ratings : params[:ratings].keys
+    # Get ratings from session if unspecified
+    if params[:ratings].nil?
+      #If no params or session, show all ratings
+      session[:ratings] = session[:ratings].nil? ? Movie.possible_ratings : session[:ratings]
+    else
+      session[:ratings] = params[:ratings]
+    end
+    
+    #Get sort order from session if unspecified
+    if !params[:sortby].nil?
+      session[:sortby] = params[:sortby]
+    end
       
     # Configure sort order
-    if params[:sortby] == 'title'
+    if session[:sortby] == 'title'
       sort_order = 'title ASC'
-    elsif params[:sortby] == 'date'
+    elsif session[:sortby] == 'date'
       sort_order = 'release_date ASC'
     else
       sort_order = ''
     end
     
     # Movie Rating filter
-    @movies = Movie.where(rating: displayed_ratings).order(sort_order)
+    @movies = Movie.where(rating: session[:ratings].keys).order(sort_order)
   end
 
   def new
